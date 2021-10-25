@@ -10,6 +10,7 @@ from kivy.vector import Vector
 from kivy.clock import Clock
 from kivy.core.window import Window
 
+from connection import Bluetooth
 
 class PongPaddle(Widget):
     score = NumericProperty(0)
@@ -20,8 +21,8 @@ class PongPaddle(Widget):
             vx, vy = ball.velocity
             offset = (ball.center_y - self.center_y) / (self.height / 2)
             bounced = Vector(-1 * vx, vy)
-            #vel = bounced * 1.1
-            vel = bounced
+            vel = bounced * 1.1
+            #vel = bounced
             ball.velocity = vel.x, vel.y + offset
             self.can_bounce = False
         elif not self.collide_widget(ball) and not self.can_bounce:
@@ -47,6 +48,7 @@ class PongGame(Widget):
         self._keyboard.bind(on_key_down = self._on_keyboard_down)
         self._keyboard.bind(on_key_up = self._on_keyboard_up)
         self.pressed_keys = set()
+        self.bt = Bluetooth()
 
     def _keyboard_closed (self):
         self._keyboard.unbind(on_key_down=self._on_keyboard_down)
@@ -88,9 +90,11 @@ class PongGame(Widget):
         if self.ball.x < self.x:
             self.player2.score += 1
             self.serve_ball(vel=(4, 0))
+            self.bt.send(code='A')
         if self.ball.right > self.width:
             self.player1.score += 1
             self.serve_ball(vel=(-4, 0))
+            self.bt.send(code='B')
 
     def on_touch_move(self, touch):
         if touch.x < self.width / 3:
