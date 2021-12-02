@@ -16,7 +16,7 @@ class PongPaddle(Widget):
     score = NumericProperty(0)
     can_bounce = BooleanProperty(True)
 
-    def bounce_ball(self, ball):
+    def bounce_ball(self, ball): #toda vez que a função é chamada, realizar uma vibração curta (ping, pong..)
         if self.collide_widget(ball) and self.can_bounce:
             vx, vy = ball.velocity
             offset = (ball.center_y - self.center_y) / (self.height / 2)
@@ -60,10 +60,12 @@ class PongGame(Widget):
     def _on_keyboard_up(self, keyboard, keycode):
         self.pressed_keys.remove(keycode[1])
 
-    def serve_ball(self, vel=(4, 0)):
+    def serve_ball(self, vel=(4, 0)): #toda vez que a função é chamada, realizar uma vibração longa (vooosh)- dar uma pausa antes do efeito para que tenha a vibração correspondente ao jogador que venceu
         self.ball.center = self.center
         self.ball.velocity = vel
-
+#1: ..-
+#2: _..
+# ou fazer o jogo só para um jogador já que estou fazendo só para uma pulseira (perguntar para a prof)
     def player_position_update(self):
         if 'w' in self.pressed_keys:
             self.player1.center_y += 15
