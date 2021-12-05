@@ -25,16 +25,25 @@
             size: 10, self.height
     
     Label:
+        markup: True
         font_size: 70  
         center_x: root.width / 4
         top: root.top - 50
-        text: str(root.player1.score)
+        text: '[color=3333ff]' + str(root.player1.score) + '[/color]'
         
     Label:
+        markup: True
         font_size: 70  
         center_x: root.width * 3 / 4
         top: root.top - 50
-        text: str(root.player2.score)
+        text: '[color=ff820d]' + str(root.player2.score) + '[/color]'
+    
+    Label:
+        markup: True
+        font_size: 70
+        center_x: root.width / 2
+        center_y: root.height *  0.7
+        text: str(root.endgame_message)
     
     PongBall:
         id: pong_ball
