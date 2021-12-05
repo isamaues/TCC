@@ -30,13 +30,13 @@ void setup() {
 
 void short_vibration(){
   digitalWrite(motorPin, HIGH); // Liga Vibração
-  delay(3000); // Aguarda 3 centésimos segundos
+  delay(500); // Aguarda 0.5 segundos
   digitalWrite(motorPin, LOW); // Desliga Vibração
 }
 
 void long_vibration(){
   digitalWrite(motorPin, HIGH);
-  delay(5000); //Aguarda 1 segundo
+  delay(1000); //Aguarda 1 segundo
   digitalWrite(motorPin, LOW);
 }
 
@@ -45,39 +45,43 @@ void loop() {
     int message = SerialBT.read();
     Serial.write(message);
     
-    
     switch (message) {
-    case 65: //A = ascii dec 65
-      //1 Vibração Curta
+    case '1': // 1 - Jogador 1 faz um ponto
+      long_vibration();
+      delay(300);
       short_vibration();
       break;
     
-    case 66: //B
-      //2 Vibrações Curtas
+    case '2': // 2 - Jogador 2 faz um ponto
+      long_vibration();
+      delay(300);
       short_vibration();
       delay(300);
       short_vibration();
       break;
     
-    case 67: //C
-      //1 Vibração Longa
+    case '3': // 3 - Bola servida
+      long_vibration();
       long_vibration();
       break;
     
-    case 68: //D
-      //2 Vibrações Longas
-      long_vibration();
-      delay(300);
-      long_vibration();
+    case '4': // 4 - Bola quica
+      short_vibration();
       break;
       
-    case 69: //E
-      //1 Vibração curta + 1 Vibração Longa
-      short_vibration();
+    case '5': // 5 - Fim de jogo
+      long_vibration();
       delay(300);
       long_vibration();
       break;
     }
-  delay(20);
+    delay(20);
   }
 }
+
+// Eventos
+// 1 - Jogador 1 faz um ponto
+// 2 - Jogador 2 faz um ponto
+// 3 - Bola servida
+// 4 - Bola quica
+// 5 - Fim de jogo
