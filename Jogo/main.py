@@ -11,6 +11,7 @@ from kivy.clock import Clock
 from kivy.core.window import Window
 
 from connection import Bluetooth
+bt = Bluetooth()
 
 class PongPaddle(Widget):
     score = NumericProperty(0)
@@ -18,12 +19,11 @@ class PongPaddle(Widget):
 
     def bounce_ball(self, ball): #toda vez que a função é chamada, realizar uma vibração curta (ping, pong..)
         if self.collide_widget(ball) and self.can_bounce:
-            ## self.bt.send(code='4')
+            bt.send(code='4')
             vx, vy = ball.velocity
             offset = (ball.center_y - self.center_y) / (self.height / 2)
             bounced = Vector(-1 * vx, vy)
             vel = bounced * 1.1
-            #vel = bounced
             ball.velocity = vel.x, vel.y + offset
             self.can_bounce = False
         elif not self.collide_widget(ball) and not self.can_bounce:
@@ -52,7 +52,7 @@ class PongGame(Widget):
         self._keyboard.bind(on_key_down = self._on_keyboard_down)
         self._keyboard.bind(on_key_up = self._on_keyboard_up)
         self.pressed_keys = set()
-        ## self.bt = Bluetooth()
+        
 
     def _keyboard_closed (self):
         self._keyboard.unbind(on_key_down=self._on_keyboard_down)
@@ -77,7 +77,7 @@ class PongGame(Widget):
     def serve_ball(self, vel=(4, 0)): #toda vez que a função é chamada, realizar uma vibração longa (vooosh)- dar uma pausa antes do efeito para que tenha a vibração correspondente ao jogador que venceu
         self.ball.center = self.center
         self.ball.velocity = vel
-        ## self.bt.send(code='3')
+        bt.send(code='3')
         
 #1: ..-
 #2: _..
@@ -97,7 +97,7 @@ class PongGame(Widget):
             Clock.schedule_once(self.start_game, 5)
             self.player1.score = 0
             self.player2.score = 0
-            ## self.bt.send(code='5')
+            bt.send(code='5')
 
     def start_game(self, *args):
         self.endgame_message = ''
@@ -122,11 +122,11 @@ class PongGame(Widget):
         if self.ball.x < self.x:
             self.player2.score += 1
             self.serve_ball(vel=(4, 0))
-            ## self.bt.send(code='2')
+            bt.send(code='2')
         if self.ball.right > self.width:
             self.player1.score += 1
             self.serve_ball(vel=(-4, 0))
-            ## self.bt.send(code='1')
+            bt.send(code='1')
 
         self.endgame(5)
 
