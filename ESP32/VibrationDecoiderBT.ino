@@ -30,13 +30,13 @@ void setup() {
 
 void short_vibration(){
   digitalWrite(motorPin, HIGH); // Liga Vibração
-  delay(500); // Aguarda 0.5 segundos
+  delay(450); // Aguarda 0.5 segundos
   digitalWrite(motorPin, LOW); // Desliga Vibração
 }
 
 void long_vibration(){
   digitalWrite(motorPin, HIGH);
-  delay(1000); //Aguarda 1 segundo
+  delay(700); //Aguarda 1 segundo
   digitalWrite(motorPin, LOW);
 }
 
@@ -62,7 +62,6 @@ void loop() {
     
     case '3': // 3 - Bola servida
       long_vibration();
-      long_vibration();
       break;
     
     case '4': // 4 - Bola quica
@@ -71,7 +70,6 @@ void loop() {
       
     case '5': // 5 - Fim de jogo
       long_vibration();
-      delay(300);
       long_vibration();
       break;
     }
