@@ -10,6 +10,8 @@ from kivy.vector import Vector
 from kivy.clock import Clock
 from kivy.core.window import Window
 
+from functools import partial
+
 from connection import Bluetooth
 bt = Bluetooth()
 
@@ -74,7 +76,7 @@ class PongGame(Widget):
         if 'down' in self.pressed_keys:
             self.player2.center_y -= 15
 
-    def serve_ball(self, vel=(4, 0)): #toda vez que a função é chamada, realizar uma vibração longa (vooosh)- dar uma pausa antes do efeito para que tenha a vibração correspondente ao jogador que venceu
+    def serve_ball(self, vel=(2, 0), *args): #toda vez que a função é chamada, realizar uma vibração longa (vooosh)- dar uma pausa antes do efeito para que tenha a vibração correspondente ao jogador que venceu
         self.ball.center = self.center
         self.ball.velocity = vel
         bt.send(code='3')
@@ -86,22 +88,33 @@ class PongGame(Widget):
     def endgame(self, max_score = 5):
         flag = False
         if self.player1.score >= max_score:
-            self.endgame_message = "[color=3333ff]Jogador 1 venceu[/color]"
+            Clock.schedule_once(partial(self._update_message, "[color=3333ff]Jogador 1 venceu[/color]"), 2.5)
             flag = True
         elif self.player2.score >= max_score:
-            self.endgame_message = "[color=#ff820d]Jogador 2 venceu[/color]"
+            Clock.schedule_once(partial(self._update_message, "[color=#ff820d]Jogador 2 venceu[/color]"), 2.5)
             flag = True
     
         if flag:
-            self.pause_game = True
-            Clock.schedule_once(self.start_game, 5)
             self.player1.score = 0
             self.player2.score = 0
-            bt.send(code='5')
+            Clock.schedule_once(partial(self._send_code, '5'), 2.5)
+            self._stop_game(t=7)
+        
+        return flag
 
-    def start_game(self, *args):
+    def _stop_game(self, t):
+        self.pause_game = True
+        Clock.schedule_once(self._start_game, t)
+
+    def _start_game(self, *args):
         self.endgame_message = ''
         self.pause_game = False
+        
+    def _send_code(self, code, *args):
+        bt.send(code=code)
+
+    def _update_message(self, message, *args):
+        self.endgame_message = message
 
     def update(self, dt):
         if self.pause_game:
@@ -121,14 +134,17 @@ class PongGame(Widget):
         # went off a side to score point?
         if self.ball.x < self.x:
             self.player2.score += 1
-            self.serve_ball(vel=(4, 0))
             bt.send(code='2')
+            Clock.schedule_once(partial(self.serve_ball, (2, 0)), 5)
+            self._stop_game(t=5.5)
         if self.ball.right > self.width:
             self.player1.score += 1
-            self.serve_ball(vel=(-4, 0))
             bt.send(code='1')
-
+            Clock.schedule_once(partial(self.serve_ball, (-2, 0)), 5)
+            self._stop_game(t=5.5)
+        
         self.endgame(5)
+            
 
 
 class PongApp(App):
