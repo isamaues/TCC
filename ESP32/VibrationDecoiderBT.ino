@@ -78,8 +78,11 @@ void loop() {
 }
 
 // Eventos
-// 1 - Jogador 1 faz um ponto
-// 2 - Jogador 2 faz um ponto
-// 3 - Bola servida
-// 4 - Bola quica
-// 5 - Fim de jogo
+// 1 - Jogador 1 faz um ponto: 1 vibração longa + 1 vibração curta
+// 2 - Jogador 2 faz um ponto: 1 vibração longa + 2 vibrações curtas
+// 3 - Bola servida: 1 vibração longa
+// 4 - Bola quica: 1 vibração curta
+// 5 - Fim de jogo: 2 vibrações longas consecutivas formando uma vibração mais longa (sem intervalo)
+// Tempo do intervalo entre as vibrações = 300ms
+//Duração da vibração curta = 450ms
+//Duração da vibração longa 700ms
